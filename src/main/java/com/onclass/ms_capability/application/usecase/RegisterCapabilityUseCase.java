@@ -16,8 +16,8 @@ public class RegisterCapabilityUseCase {
     private static final int MIN_TECHNOLOGIES = 3;
     private static final int MAX_TECHNOLOGIES = 20;
 
-    private CapabilityRepository capabilityRepository;
-    private TechnologyRepository technologyRepository;
+    private final CapabilityRepository capabilityRepository;
+    private final TechnologyRepository technologyRepository;
 
     public RegisterCapabilityUseCase(CapabilityRepository capabilityRepository, TechnologyRepository technologyRepository) {
         this.capabilityRepository = capabilityRepository;
