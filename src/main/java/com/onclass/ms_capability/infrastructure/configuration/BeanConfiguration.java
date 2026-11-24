@@ -1,0 +1,25 @@
+package com.onclass.ms_capability.infrastructure.configuration;
+
+import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
+import com.onclass.ms_capability.domain.repository.CapabilityRepository;
+import com.onclass.ms_capability.domain.repository.TechnologyRepository;
+import org.springframework.boot.autoconfigure.web.WebProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class BeanConfiguration {
+
+    @Bean
+    public RegisterCapabilityUseCase registerCapabilityUseCase(
+        CapabilityRepository capabilityRepository,
+        TechnologyRepository technologyRepository
+    ) {
+        return new RegisterCapabilityUseCase(capabilityRepository, technologyRepository);
+    }
+
+    @Bean
+    public WebProperties.Resources resources() {
+        return new WebProperties.Resources();
+    }
+}
