@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -36,10 +37,9 @@ public class TechnologyRepositoryImpl implements TechnologyRepository {
                         new BusinessException(ErrorCode.ASSOCIATE_TECHNOLOGY_ERROR, errorBody.getDescription())
                     )))
             .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-                Mono.error(new BusinessException(
-                    ErrorCode.ASSOCIATE_TECHNOLOGY_ERROR,
-                    "Technology service is currently unavailable"
-                )))
-            .bodyToMono(Void.class);
+                Mono.error(new BusinessException(ErrorCode.TECHNOLOGY_SERVICE_UNAVAILABLE)))
+            .bodyToMono(Void.class)
+            .onErrorMap(WebClientRequestException.class, ex ->
+                new BusinessException(ErrorCode.TECHNOLOGY_SERVICE_UNAVAILABLE));
     }
 }

@@ -10,10 +10,9 @@ public class WebClientConfig {
 
     @Bean
     public WebClient technologyWebClient(
-        WebClient.Builder builder,
-        @Value("external.ms-technology.base-url") String baseUrl
+        @Value("${external.ms-technology.base-url}") String baseUrl
     ) {
-        return builder
+        return WebClient.builder()
             .baseUrl(baseUrl)
             .build();
     }
