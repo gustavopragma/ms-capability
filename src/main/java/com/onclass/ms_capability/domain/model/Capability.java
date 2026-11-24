@@ -32,4 +32,20 @@ public class Capability {
     public List<Long> getTechnologyIds() {
         return technologyIds;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setTechnologyIds(List<Long> technologyIds) {
+        this.technologyIds = technologyIds;
+    }
 }
