@@ -1,11 +1,13 @@
 package com.onclass.ms_capability.domain.exception;
 
 public enum ErrorCode {
-    CAPABILITY_ALREADY_EXISTS("SE_001", "Technology name already exists"),
+    CAPABILITY_ALREADY_EXISTS("SE_001", "Capability name already exists"),
     INVALID_TECHNOLOGY_COUNT("SE_002", "A capability must have between 3 and 20 technologies"),
     DUPLICATE_TECHNOLOGIES("SE_003", "Technologies list cannot contain duplicate IDs"),
     ASSOCIATE_TECHNOLOGY_ERROR("SE004", "Error associating technologies in technology service"),
-    INTERNAL_SERVER_ERROR("SE005", "Unexpected internal server error");
+    INTERNAL_SERVER_ERROR("SE005", "Unexpected internal server error"),
+    VALIDATION_ERROR("SE_006", "Validation error"),
+    TECHNOLOGY_SERVICE_UNAVAILABLE("SE007", "Technology service is currently unavailable");
 
     private final String code;
     private final String message;
