@@ -1,6 +1,9 @@
 package com.onclass.ms_capability.infrastructure.handler;
 
+import com.onclass.ms_capability.application.usecase.ListCapabilitiesUseCase;
 import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
+import com.onclass.ms_capability.domain.exception.BusinessException;
+import com.onclass.ms_capability.domain.exception.ErrorCode;
 import com.onclass.ms_capability.infrastructure.adapter.rest.dto.RegisterCapabilityRequestDto;
 import com.onclass.ms_capability.infrastructure.adapter.rest.mapper.CapabilityRestMapper;
 import com.onclass.ms_capability.infrastructure.validation.ValidationDto;
@@ -15,6 +18,12 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class CapabilityHandler {
+    private static final String PAGE_PARAM = "page";
+    private static final String SIZE_PARAM = "size";
+    private static final String SORT_BY_PARAM = "sortBy";
+    private static final String SORT_DIRECTION_PARAM = "sortDirection";
+
+    private final ListCapabilitiesUseCase listCapabilitiesUseCase;
     private final RegisterCapabilityUseCase registerCapabilityUseCase;
     private final CapabilityRestMapper capabilityRestMapper;
     private final ValidationDto validationDto;
@@ -29,5 +38,27 @@ public class CapabilityHandler {
                 ServerResponse.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(capabilityResponseDto));
+    }
+
+    public Mono<ServerResponse> getCapabilities(ServerRequest serverRequest) {
+        int page;
+        int size;
+
+        try {
+            page = Integer.parseInt(serverRequest.queryParam(PAGE_PARAM).orElse("0"));
+            size = Integer.parseInt(serverRequest.queryParam(SIZE_PARAM).orElse("20"));
+        } catch (NumberFormatException ex) {
+            return Mono.error(new BusinessException(ErrorCode.INVALID_PAGINATION_PARAMS));
+        }
+
+        String sortBy = serverRequest.queryParam(SORT_BY_PARAM).orElse("name");
+        String sortDirection = serverRequest.queryParam(SORT_DIRECTION_PARAM).orElse("ASC");
+
+        return listCapabilitiesUseCase.getCapabilities(page, size, sortBy, sortDirection)
+            .map(capabilityRestMapper::toCapabilityWithTechnologiesDto)
+            .collectList()
+            .flatMap(capabilities -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(capabilities));
     }
 }
