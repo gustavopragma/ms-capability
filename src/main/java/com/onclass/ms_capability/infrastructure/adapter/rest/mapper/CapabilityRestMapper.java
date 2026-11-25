@@ -2,10 +2,7 @@ package com.onclass.ms_capability.infrastructure.adapter.rest.mapper;
 
 import com.onclass.ms_capability.domain.model.Capability;
 import com.onclass.ms_capability.domain.model.Technology;
-import com.onclass.ms_capability.infrastructure.adapter.rest.dto.CapabilityResponseDto;
-import com.onclass.ms_capability.infrastructure.adapter.rest.dto.CapabilityWithTechnologiesDto;
-import com.onclass.ms_capability.infrastructure.adapter.rest.dto.RegisterCapabilityRequestDto;
-import com.onclass.ms_capability.infrastructure.adapter.rest.dto.TechnologySummaryDto;
+import com.onclass.ms_capability.infrastructure.adapter.rest.dto.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,6 +32,15 @@ public class CapabilityRestMapper {
             capability.getId(),
             capability.getName(),
             capability.getDescription(),
+            capability.getTechnologies().stream().map(technology ->
+                new TechnologySummaryDto(technology.getId(), technology.getName())).toList()
+        );
+    }
+
+    public BootcampCapabilityResponseDto toBootcampCapabilityResponseDto(Capability capability) {
+        return new BootcampCapabilityResponseDto(
+            capability.getId(),
+            capability.getName(),
             capability.getTechnologies().stream().map(technology ->
                 new TechnologySummaryDto(technology.getId(), technology.getName())).toList()
         );

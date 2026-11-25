@@ -1,6 +1,7 @@
 package com.onclass.ms_capability.infrastructure.configuration;
 
 import com.onclass.ms_capability.application.usecase.AssociateBootcampCapabilitiesUseCase;
+import com.onclass.ms_capability.application.usecase.ListCapabilitiesByBootcampUseCase;
 import com.onclass.ms_capability.application.usecase.ListCapabilitiesUseCase;
 import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
 import com.onclass.ms_capability.domain.repository.CapabilityRepository;
@@ -34,6 +35,17 @@ public class BeanConfiguration {
     ) {
         return new AssociateBootcampCapabilitiesUseCase(
             capabilityRepository
+        );
+    }
+
+    @Bean
+    public ListCapabilitiesByBootcampUseCase listCapabilitiesByBootcampUseCase(
+        CapabilityRepository capabilityRepository,
+        TechnologyRepository technologyRepository
+    ) {
+        return new ListCapabilitiesByBootcampUseCase(
+            capabilityRepository,
+            technologyRepository
         );
     }
 

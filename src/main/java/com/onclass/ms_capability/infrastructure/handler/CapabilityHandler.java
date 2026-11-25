@@ -1,6 +1,7 @@
 package com.onclass.ms_capability.infrastructure.handler;
 
 import com.onclass.ms_capability.application.usecase.AssociateBootcampCapabilitiesUseCase;
+import com.onclass.ms_capability.application.usecase.ListCapabilitiesByBootcampUseCase;
 import com.onclass.ms_capability.application.usecase.ListCapabilitiesUseCase;
 import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
 import com.onclass.ms_capability.domain.exception.BusinessException;
@@ -26,6 +27,7 @@ public class CapabilityHandler {
     private static final String SORT_DIRECTION_PARAM = "sortDirection";
 
     private final ListCapabilitiesUseCase listCapabilitiesUseCase;
+    private final ListCapabilitiesByBootcampUseCase listCapabilitiesByBootcampUseCase;
     private final RegisterCapabilityUseCase registerCapabilityUseCase;
     private final AssociateBootcampCapabilitiesUseCase associateBootcampCapabilitiesUseCase;
     private final CapabilityRestMapper capabilityRestMapper;
@@ -72,5 +74,23 @@ public class CapabilityHandler {
                 associateBootcampCapabilitiesUseCase.associate(
                     associateBootcampRequestDto.getBootcampId(), associateBootcampRequestDto.getCapabilityIds()))
             .then(ServerResponse.ok().build());
+    }
+
+    public Mono<ServerResponse> getCapabilitiesByBootcampId(ServerRequest serverRequest) {
+        Long bootcampId;
+        try {
+            bootcampId = Long.valueOf(serverRequest.pathVariable("bootcampId"));
+        } catch (NumberFormatException ex) {
+            return Mono.error(new BusinessException(ErrorCode.INVALID_BOOTCAMP_ID));
+        }
+
+        return listCapabilitiesByBootcampUseCase.getCapabilitiesByBootcampId(bootcampId)
+            .map(capabilityRestMapper::toBootcampCapabilityResponseDto)
+            .collectList()
+            .flatMap(capabilities  ->
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(capabilities));
+
     }
 }

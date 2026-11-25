@@ -11,7 +11,8 @@ public enum ErrorCode {
     INVALID_PAGINATION_PARAMS("SE008", "Page must be >= 0 and size must be > 0"),
     INVALID_SORT_PARAMS("SE009", "Invalid sortBy value(name, technologyCount) or sortDirection(ASC, DESC)"),
     RETRIEVE_TECHNOLOGIES_ERROR("SE010", "Error retrieving technology"),
-    CAPABILITY_NOT_FOUND("SE011", "Capability don't exists");
+    CAPABILITY_NOT_FOUND("SE011", "Capability don't exists"),
+    INVALID_BOOTCAMP_ID("SE012", "Invalid bootcamp id param");
 
 
     private final String code;

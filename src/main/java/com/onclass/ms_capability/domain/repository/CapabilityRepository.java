@@ -14,4 +14,5 @@ public interface CapabilityRepository {
     Flux<Capability> findAll();
     Flux<Long> findExistingIds(Collection<Long> capabilityIds);
     Mono<Void> associateBootcampWithCapabilities(Long bootcampId, List<Long> capabilityIds);
+    Flux<Capability> findAllByBootcampId(Long bootcampId);
 }
