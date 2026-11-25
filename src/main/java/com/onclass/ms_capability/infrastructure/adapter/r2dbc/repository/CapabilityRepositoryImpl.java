@@ -60,4 +60,10 @@ public class CapabilityRepositoryImpl implements CapabilityRepository {
         return mySqlBootcampCapabilityRepository.saveAll(bootcampCapabilityEntities)
             .then();
     }
+
+    @Override
+    public Flux<Capability> findAllByBootcampId(Long bootcampId) {
+        return mySqlBootcampCapabilityRepository.findCapabilitiesByBootcampId(bootcampId)
+            .map(capabilityEntityMapper::toDomain);
+    }
 }

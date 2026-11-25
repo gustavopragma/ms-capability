@@ -108,6 +108,7 @@ public class CapabilityRouter {
     public RouterFunction<ServerResponse> capabilityRoutes(CapabilityHandler capabilityHandler) {
         return route(POST("/api/v1/capabilities"), capabilityHandler::registerCapability)
             .andRoute(GET("/api/v1/capabilities"), capabilityHandler::getCapabilities)
-            .andRoute(POST("/api/v1/capabilities/associate-bootcamp"), capabilityHandler::associateBootcamp);
+            .andRoute(POST("/api/v1/capabilities/associate-bootcamp"), capabilityHandler::associateBootcamp)
+            .andRoute(GET("/api/v1/capabilities/by-bootcamp/{bootcampId}"), capabilityHandler::getCapabilitiesByBootcampId);
     }
 }
