@@ -7,7 +7,10 @@ public enum ErrorCode {
     ASSOCIATE_TECHNOLOGY_ERROR("SE004", "Error associating technologies in technology service"),
     INTERNAL_SERVER_ERROR("SE005", "Unexpected internal server error"),
     VALIDATION_ERROR("SE_006", "Validation error"),
-    TECHNOLOGY_SERVICE_UNAVAILABLE("SE007", "Technology service is currently unavailable");
+    TECHNOLOGY_SERVICE_UNAVAILABLE("SE007", "Technology service is currently unavailable"),
+    INVALID_PAGINATION_PARAMS("SE008", "Page must be >= 0 and size must be > 0"),
+    INVALID_SORT_PARAMS("SE009", "Invalid sortBy value(name, technologyCount) or sortDirection(ASC, DESC)"),
+    RETRIEVE_TECHNOLOGIES_ERROR("SE010", "Error retrieving technology");
 
     private final String code;
     private final String message;

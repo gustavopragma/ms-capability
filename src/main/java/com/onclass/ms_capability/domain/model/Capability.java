@@ -7,6 +7,7 @@ public class Capability {
     private String name;
     private String description;
     private List<Long> technologyIds;
+    private List<Technology> technologies;
 
     public Capability() {}
 
@@ -15,6 +16,14 @@ public class Capability {
         this.name = name;
         this.description = description;
         this.technologyIds = technologyIds;
+    }
+
+    public Capability(String name, Long id, String description, List<Long> technologyIds, List<Technology> technologies) {
+        this.name = name;
+        this.id = id;
+        this.description = description;
+        this.technologyIds = technologyIds;
+        this.technologies = technologies;
     }
 
     public Long getId() {
@@ -47,5 +56,13 @@ public class Capability {
 
     public void setTechnologyIds(List<Long> technologyIds) {
         this.technologyIds = technologyIds;
+    }
+
+    public List<Technology> getTechnologies() {
+        return technologies;
+    }
+
+    public void setTechnologies(List<Technology> technologies) {
+        this.technologies = technologies;
     }
 }
