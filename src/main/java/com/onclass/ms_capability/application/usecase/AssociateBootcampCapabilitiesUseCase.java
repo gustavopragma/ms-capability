@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AssociateBootcampCapabilitiesUseCase {
-    private CapabilityRepository capabilityRepository;
+    private final CapabilityRepository capabilityRepository;
 
     public AssociateBootcampCapabilitiesUseCase(CapabilityRepository capabilityRepository) {
         this.capabilityRepository = capabilityRepository;
