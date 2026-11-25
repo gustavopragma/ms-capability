@@ -5,6 +5,7 @@ import com.onclass.ms_capability.domain.repository.CapabilityRepository;
 import com.onclass.ms_capability.infrastructure.adapter.r2dbc.mapper.CapabilityEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -32,5 +33,11 @@ public class CapabilityRepositoryImpl implements CapabilityRepository {
     @Override
     public Mono<Void> deleteById(Long id) {
         return mySqlCapabilityRepository.deleteById(id);
+    }
+
+    @Override
+    public Flux<Capability> findAll() {
+        return mySqlCapabilityRepository.findAll()
+            .map(capabilityEntityMapper::toDomain);
     }
 }
