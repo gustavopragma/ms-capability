@@ -1,9 +1,11 @@
 package com.onclass.ms_capability.infrastructure.handler;
 
+import com.onclass.ms_capability.application.usecase.AssociateBootcampCapabilitiesUseCase;
 import com.onclass.ms_capability.application.usecase.ListCapabilitiesUseCase;
 import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
 import com.onclass.ms_capability.domain.exception.BusinessException;
 import com.onclass.ms_capability.domain.exception.ErrorCode;
+import com.onclass.ms_capability.infrastructure.adapter.rest.dto.AssociateBootcampRequestDto;
 import com.onclass.ms_capability.infrastructure.adapter.rest.dto.RegisterCapabilityRequestDto;
 import com.onclass.ms_capability.infrastructure.adapter.rest.mapper.CapabilityRestMapper;
 import com.onclass.ms_capability.infrastructure.validation.ValidationDto;
@@ -25,6 +27,7 @@ public class CapabilityHandler {
 
     private final ListCapabilitiesUseCase listCapabilitiesUseCase;
     private final RegisterCapabilityUseCase registerCapabilityUseCase;
+    private final AssociateBootcampCapabilitiesUseCase associateBootcampCapabilitiesUseCase;
     private final CapabilityRestMapper capabilityRestMapper;
     private final ValidationDto validationDto;
 
@@ -60,5 +63,14 @@ public class CapabilityHandler {
             .flatMap(capabilities -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(capabilities));
+    }
+
+    public Mono<ServerResponse> associateBootcamp(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(AssociateBootcampRequestDto.class)
+            .flatMap(validationDto::validate)
+            .flatMap(associateBootcampRequestDto ->
+                associateBootcampCapabilitiesUseCase.associate(
+                    associateBootcampRequestDto.getBootcampId(), associateBootcampRequestDto.getCapabilityIds()))
+            .then(ServerResponse.ok().build());
     }
 }

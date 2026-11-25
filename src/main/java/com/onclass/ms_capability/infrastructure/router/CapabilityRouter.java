@@ -1,5 +1,6 @@
 package com.onclass.ms_capability.infrastructure.router;
 
+import com.onclass.ms_capability.infrastructure.adapter.rest.dto.AssociateBootcampRequestDto;
 import com.onclass.ms_capability.infrastructure.adapter.rest.dto.CapabilityResponseDto;
 import com.onclass.ms_capability.infrastructure.adapter.rest.dto.CapabilityWithTechnologiesDto;
 import com.onclass.ms_capability.infrastructure.adapter.rest.dto.RegisterCapabilityRequestDto;
@@ -81,10 +82,32 @@ public class CapabilityRouter {
                         content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
                 }
             )
+        ),
+        @RouterOperation(
+            path = "/api/v1/capabilities/associate-bootcamp",
+            method = RequestMethod.POST,
+            beanClass = CapabilityHandler.class,
+            beanMethod = "associateBootcamp",
+            operation = @Operation(
+                operationId = "associateBootcampCapabilities",
+                summary = "Associate capabilities with a bootcamp",
+                requestBody = @RequestBody(
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = AssociateBootcampRequestDto.class))
+                ),
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "Capabilities associated with bootcamp successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid pagination or sort parameters",
+                        content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                        content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                }
+            )
         )
     })
     public RouterFunction<ServerResponse> capabilityRoutes(CapabilityHandler capabilityHandler) {
         return route(POST("/api/v1/capabilities"), capabilityHandler::registerCapability)
-            .andRoute(GET("/api/v1/capabilities"), capabilityHandler::getCapabilities);
+            .andRoute(GET("/api/v1/capabilities"), capabilityHandler::getCapabilities)
+            .andRoute(POST("/api/v1/capabilities/associate-bootcamp"), capabilityHandler::associateBootcamp);
     }
 }
