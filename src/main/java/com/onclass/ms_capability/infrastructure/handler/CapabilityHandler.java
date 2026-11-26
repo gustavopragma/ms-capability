@@ -1,9 +1,6 @@
 package com.onclass.ms_capability.infrastructure.handler;
 
-import com.onclass.ms_capability.application.usecase.AssociateBootcampCapabilitiesUseCase;
-import com.onclass.ms_capability.application.usecase.ListCapabilitiesByBootcampUseCase;
-import com.onclass.ms_capability.application.usecase.ListCapabilitiesUseCase;
-import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
+import com.onclass.ms_capability.application.usecase.*;
 import com.onclass.ms_capability.domain.exception.BusinessException;
 import com.onclass.ms_capability.domain.exception.ErrorCode;
 import com.onclass.ms_capability.infrastructure.adapter.rest.dto.AssociateBootcampRequestDto;
@@ -14,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -30,6 +28,8 @@ public class CapabilityHandler {
     private final ListCapabilitiesByBootcampUseCase listCapabilitiesByBootcampUseCase;
     private final RegisterCapabilityUseCase registerCapabilityUseCase;
     private final AssociateBootcampCapabilitiesUseCase associateBootcampCapabilitiesUseCase;
+    private final DeleteCapabilitiesByBootcampUseCase deleteCapabilitiesByBootcampUseCase;
+    private final TransactionalOperator transactionalOperator;
     private final CapabilityRestMapper capabilityRestMapper;
     private final ValidationDto validationDto;
 
@@ -87,10 +87,17 @@ public class CapabilityHandler {
         return listCapabilitiesByBootcampUseCase.getCapabilitiesByBootcampId(bootcampId)
             .map(capabilityRestMapper::toBootcampCapabilityResponseDto)
             .collectList()
-            .flatMap(capabilities  ->
+            .flatMap(capabilities ->
                 ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(capabilities));
 
+    }
+
+    public Mono<ServerResponse> deleteByBootcampId(ServerRequest serverRequest) {
+        Long bootcampId = Long.valueOf(serverRequest.pathVariable("bootcampId"));
+        return deleteCapabilitiesByBootcampUseCase.deleteByBootcampId(bootcampId)
+            .as(transactionalOperator::transactional)
+            .then(ServerResponse.noContent().build());
     }
 }

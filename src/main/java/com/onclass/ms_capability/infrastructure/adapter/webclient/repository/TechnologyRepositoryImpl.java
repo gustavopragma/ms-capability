@@ -5,6 +5,7 @@ import com.onclass.ms_capability.domain.exception.ErrorCode;
 import com.onclass.ms_capability.domain.model.Technology;
 import com.onclass.ms_capability.domain.repository.TechnologyRepository;
 import com.onclass.ms_capability.infrastructure.adapter.webclient.dto.AssociateTechnologiesRequestDto;
+import com.onclass.ms_capability.infrastructure.adapter.webclient.dto.DeleteTechnologiesByCapabilitiesRequestDto;
 import com.onclass.ms_capability.infrastructure.adapter.webclient.dto.ErrorResponseDto;
 import com.onclass.ms_capability.infrastructure.adapter.webclient.dto.TechnologyResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,27 @@ public class TechnologyRepositoryImpl implements TechnologyRepository {
             .bodyToFlux(TechnologyResponseDto.class)
             .map(technologyResponseDto ->
                 new Technology(technologyResponseDto.getId(), technologyResponseDto.getName()))
+            .onErrorMap(WebClientRequestException.class, ex ->
+                new BusinessException(ErrorCode.TECHNOLOGY_SERVICE_UNAVAILABLE));
+    }
+
+    @Override
+    public Mono<Void> deleteTechnologiesByCapabilityIds(List<Long> capabilityIds) {
+        DeleteTechnologiesByCapabilitiesRequestDto deleteTechnologiesByCapabilitiesRequestDto =
+            new DeleteTechnologiesByCapabilitiesRequestDto(capabilityIds);
+
+        return webClient.post()
+            .uri("/api/v1/technologies/delete-by-capabilities")
+            .bodyValue(deleteTechnologiesByCapabilitiesRequestDto)
+            .retrieve()
+            .onStatus(HttpStatusCode::is4xxClientError, clientResponse ->
+                clientResponse.bodyToMono(ErrorResponseDto.class)
+                    .flatMap(errorBody -> Mono.error(
+                        new BusinessException(ErrorCode.ERROR_DELETE_TECHNOLOGIES, errorBody.getDescription())
+                    )))
+            .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
+                Mono.error(new BusinessException(ErrorCode.TECHNOLOGY_SERVICE_UNAVAILABLE)))
+            .bodyToMono(Void.class)
             .onErrorMap(WebClientRequestException.class, ex ->
                 new BusinessException(ErrorCode.TECHNOLOGY_SERVICE_UNAVAILABLE));
     }

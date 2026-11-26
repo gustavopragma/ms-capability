@@ -12,7 +12,8 @@ public enum ErrorCode {
     INVALID_SORT_PARAMS("SE009", "Invalid sortBy value(name, technologyCount) or sortDirection(ASC, DESC)"),
     RETRIEVE_TECHNOLOGIES_ERROR("SE010", "Error retrieving technology"),
     CAPABILITY_NOT_FOUND("SE011", "Capability don't exists"),
-    INVALID_BOOTCAMP_ID("SE012", "Invalid bootcamp id param");
+    INVALID_BOOTCAMP_ID("SE012", "Invalid bootcamp id param"),
+    ERROR_DELETE_TECHNOLOGIES("SE012", "Error deleting in technology service");
 
 
     private final String code;

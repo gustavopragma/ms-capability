@@ -1,9 +1,6 @@
 package com.onclass.ms_capability.infrastructure.configuration;
 
-import com.onclass.ms_capability.application.usecase.AssociateBootcampCapabilitiesUseCase;
-import com.onclass.ms_capability.application.usecase.ListCapabilitiesByBootcampUseCase;
-import com.onclass.ms_capability.application.usecase.ListCapabilitiesUseCase;
-import com.onclass.ms_capability.application.usecase.RegisterCapabilityUseCase;
+import com.onclass.ms_capability.application.usecase.*;
 import com.onclass.ms_capability.domain.repository.CapabilityRepository;
 import com.onclass.ms_capability.domain.repository.TechnologyRepository;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -44,6 +41,17 @@ public class BeanConfiguration {
         TechnologyRepository technologyRepository
     ) {
         return new ListCapabilitiesByBootcampUseCase(
+            capabilityRepository,
+            technologyRepository
+        );
+    }
+
+    @Bean
+    public DeleteCapabilitiesByBootcampUseCase deleteCapabilitiesByBootcampUseCase(
+        CapabilityRepository capabilityRepository,
+        TechnologyRepository technologyRepository
+    ) {
+        return new DeleteCapabilitiesByBootcampUseCase(
             capabilityRepository,
             technologyRepository
         );
