@@ -15,4 +15,8 @@ public interface CapabilityRepository {
     Flux<Long> findExistingIds(Collection<Long> capabilityIds);
     Mono<Void> associateBootcampWithCapabilities(Long bootcampId, List<Long> capabilityIds);
     Flux<Capability> findAllByBootcampId(Long bootcampId);
+    Flux<Long> findCapabilityIdsByBootcampId(Long bootcampId);
+    Mono<Void> deleteAllByBootcampId(Long bootcampId);
+    Mono<Long> countByCapabilityId(Long capabilityId);
+    Mono<Void> deleteAllById(List<Long> ids);
 }

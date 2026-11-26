@@ -9,4 +9,5 @@ import java.util.List;
 public interface TechnologyRepository {
     Mono<Void> associateTechnologies(Long capabilityId, List<Long> technologyIds);
     Flux<Technology> findTechnologyByCapabilityId(Long capabilityId);
+    Mono<Void> deleteTechnologiesByCapabilityIds(List<Long> capabilityIds);
 }
