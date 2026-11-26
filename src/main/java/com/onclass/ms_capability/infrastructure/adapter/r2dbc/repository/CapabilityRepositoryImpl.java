@@ -66,4 +66,24 @@ public class CapabilityRepositoryImpl implements CapabilityRepository {
         return mySqlBootcampCapabilityRepository.findCapabilitiesByBootcampId(bootcampId)
             .map(capabilityEntityMapper::toDomain);
     }
+
+    @Override
+    public Flux<Long> findCapabilityIdsByBootcampId(Long bootcampId) {
+        return mySqlBootcampCapabilityRepository.findCapabilityIdsByBootcampId(bootcampId);
+    }
+
+    @Override
+    public Mono<Void> deleteAllByBootcampId(Long bootcampId) {
+        return mySqlBootcampCapabilityRepository.deleteAllByBootcampId(bootcampId);
+    }
+
+    @Override
+    public Mono<Long> countByCapabilityId(Long capabilityId) {
+        return mySqlBootcampCapabilityRepository.countByCapabilityId(capabilityId);
+    }
+
+    @Override
+    public Mono<Void> deleteAllById(List<Long> ids) {
+        return mySqlCapabilityRepository.deleteAllById(ids);
+    }
 }

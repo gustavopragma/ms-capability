@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
@@ -103,12 +102,55 @@ public class CapabilityRouter {
                         content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
                 }
             )
+        ),
+        @RouterOperation(
+            path = "/api/v1/capabilities/by-bootcamp/{bootcampId}",
+            method = RequestMethod.GET,
+            beanClass = CapabilityHandler.class,
+            beanMethod = "getCapabilitiesByBootcampId",
+            operation = @Operation(
+                operationId = "getCapabilitiesByBootcampId",
+                summary = "Get capabilities with technologies associated with a bootcamp id",
+                parameters = {
+                    @Parameter(name = "bootcampId", in = ParameterIn.PATH, required = true, description = "Bootcamp id", example = "1")
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        description = "Capabilities retrieved successfully",
+                        content = @Content(array = @ArraySchema(schema = @Schema(implementation = CapabilityWithTechnologiesDto.class)))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                        content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/api/v1/capabilities/by-bootcamp/{bootcampId}",
+            method = RequestMethod.DELETE,
+            beanClass = CapabilityHandler.class,
+            beanMethod = "deleteByBootcampId",
+            operation = @Operation(
+                operationId = "deleteCapabilitiesByBootcampId",
+                summary = "Delete bootcamp-capability relations and capabilities with their technologies",
+                parameters = {
+                    @Parameter(name = "bootcampId", in = ParameterIn.PATH, required = true, description = "Bootcamp ID", example = "1")
+                },
+                responses = {
+                    @ApiResponse(responseCode = "204", description = "Capabilities deleted successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid bootcamp id",
+                        content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                        content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                }
+            )
         )
     })
     public RouterFunction<ServerResponse> capabilityRoutes(CapabilityHandler capabilityHandler) {
         return route(POST("/api/v1/capabilities"), capabilityHandler::registerCapability)
             .andRoute(GET("/api/v1/capabilities"), capabilityHandler::getCapabilities)
             .andRoute(POST("/api/v1/capabilities/associate-bootcamp"), capabilityHandler::associateBootcamp)
-            .andRoute(GET("/api/v1/capabilities/by-bootcamp/{bootcampId}"), capabilityHandler::getCapabilitiesByBootcampId);
+            .andRoute(GET("/api/v1/capabilities/by-bootcamp/{bootcampId}"), capabilityHandler::getCapabilitiesByBootcampId)
+            .andRoute(DELETE("/api/v1/capabilities/by-bootcamp/{bootcampId}"), capabilityHandler::deleteByBootcampId);
     }
 }
